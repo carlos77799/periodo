@@ -1,0 +1,6 @@
+C:\Users\Borrero\Desktop\periodo>git log
+commit bc18f4662530f83f80e43bb8171b8b8f6501a3fb (HEAD -> master)
+Author: carlos77799 <borrerojean12@gmail.com>
+Date:   Wed Nov 6 12:03:44 2024 -0500
+
+    implementar la funcion de registrar envios

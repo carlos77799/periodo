@@ -1,0 +1,131 @@
+#include <iostream>
+#include <malloc.h>
+#include <cstring> // Para usar strcmp
+
+using namespace std;
+
+struct envio {
+    char destinatario[50];
+    char codigoSeguimiento[20];
+    int prioridad; // 1: Alta, 2: Media, 3: Baja
+    int destino; // 1: Internacional, 0: Nacional
+    envio *sig;
+};
+
+envio *cab = NULL; // Inicializar la cabeza de la lista
+
+// Función para registrar un nuevo envío
+void registrar() {
+    envio *aux = (envio *)malloc(sizeof(envio));
+    cout << "Nombre del destinatario: ";
+    cin >> aux->destinatario;
+    cout << "Código de seguimiento: ";
+    cin >> aux->codigoSeguimiento;
+    cout << "Prioridad (1: Alta, 2: Media, 3: Baja): ";
+    cin >> aux->prioridad;
+
+    // Validar prioridad
+    while (aux->prioridad < 1 || aux->prioridad > 3) {
+        cout << "Prioridad inválida. Ingrese nuevamente (1-3): ";
+        cin >> aux->prioridad;
+    }
+
+    cout << "Destino (1: Internacional, 0: Nacional): ";
+    cin >> aux->destino;
+
+    aux->sig = NULL; // Inicializar el siguiente como NULL
+
+    if (!cab) {
+        cab = aux; // Primer envío
+    } else {
+        envio *temp = cab;
+        while (temp->sig != NULL) {
+            temp = temp->sig; // Navegar hasta el final de la lista
+        }
+        temp->sig = aux; // Añadir nuevo envío
+    }
+}
+
+// Función para mostrar todos los envíos
+void mostrar() {
+    if (cab == NULL) {
+        cout << "No hay envíos registrados." << endl;
+        return;
+    }
+    envio *aux = cab;
+    while (aux != NULL) {
+        cout << "Destinatario: " << aux->destinatario
+             << ", Código de Seguimiento: " << aux->codigoSeguimiento
+             << ", Prioridad: " << aux->prioridad
+             << ", Destino: " << (aux->destino == 1 ? "Internacional" : "Nacional") << endl;
+        aux = aux->sig;
+    }
+}
+
+// Función para ordenar los envíos
+void ordenar() {
+    if (!cab) return; // Si la lista está vacía
+
+    bool intercambiado;
+    do {
+        intercambiado = false;
+        envio *current = cab;
+        while (current->sig != NULL) {
+            // Comparar prioridades
+            if (current->prioridad > current->sig->prioridad ||
+                (current->prioridad == current->sig->prioridad && current->destino < current->sig->destino) ||
+                (current->prioridad == current->sig->prioridad && current->destino == current->sig->destino && strcmp(current->codigoSeguimiento, current->sig->codigoSeguimiento) > 0)) {
+                
+                // Intercambiar los datos de los nodos
+                envio temp = *current;
+                *current = *current->sig;
+                *current->sig = temp;
+                intercambiado = true;
+            }
+            current = current->sig;
+        }
+    } while (intercambiado);
+}
+
+// Función para liberar la memoria utilizada
+void liberarMemoria() {
+    while (cab != NULL) {
+        envio *aux = cab;
+        cab = cab->sig;
+        free(aux);
+    }
+}
+
+int main() {
+    int opcion;
+    do {
+        cout << "Menu" << endl;
+        cout << "1. Registrar Envío" << endl;
+        cout << "2. Mostrar Envíos" << endl;
+        cout << "3. Ordenar Envíos" << endl;
+        cout << "4. Salir" << endl;
+        cin >> opcion;
+        switch (opcion) {
+            case 1:
+                registrar();
+                break;
+            case 2:
+                mostrar();
+                break;
+            case 3:
+                ordenar();
+                cout << "Envíos ordenados:" << endl;
+                mostrar(); // Mostrar después de ordenar
+                break;
+            case 4:
+                cout << "Saliendo..." << endl;
+                break;
+            default:
+                cout << "Opción no válida. Intente de nuevo." << endl;
+                break;
+        }
+    } while (opcion != 4);
+
+    liberarMemoria(); // Liberar memoria al salir
+    return 0;
+}

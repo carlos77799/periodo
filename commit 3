@@ -1,0 +1,6 @@
+C:\Users\Borrero\Desktop\mmmmm>git log
+commit 42707ece611ecc94af65aac31b0d60c51cc2f3dc (HEAD -> master)
+Author: carlos77799 <borrerojean12@gmail.com>
+Date:   Wed Nov 6 12:18:08 2024 -0500
+
+    implementar la funcionalidad de ordenacion por prioridad y destivo
